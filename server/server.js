@@ -5,14 +5,6 @@ var { User } = require('./models/user');
 var express  = require('express');
 var bodyParser = require('body-parser');
 
-/* import * as mongoose from './db/mongoose';
-import * as Todo from './models/todo';
-import * as User from './models/user';
-
-import * as express from 'express';
-import * as bodyParser from 'body-parser'; */
-
-
 var app = express();
 
 app.use(bodyParser.json());
@@ -33,12 +25,11 @@ app.post('/todos', (req, res) => {
         });
 });
 
-
-
-
-
-
-
 app.listen(3000, () => {
     console.log('Started on port 3000');
 })
+
+
+module.exports = {
+    app
+}
