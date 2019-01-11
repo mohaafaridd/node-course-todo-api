@@ -4,16 +4,16 @@ const request = require('supertest');
 const {
     app
 } = require('./../server');
+
 const {
     Todo
 } = require('./../models/todo');
 
 const todos = [{
     text: 'First Test Todo'
-},{
+}, {
     text: 'Second Test Todo'
-},
-]
+}, ]
 
 beforeEach((done) => {
     Todo.remove({}).then(() => {
@@ -28,20 +28,25 @@ describe('POST /todos', () => {
         var text = 'Test todo text';
 
         request(app)
+            // posts data into database
             .post('/todos')
             .send({
                 text
             })
+            // expected values
             .expect(200)
             .expect((res) => {
                 expect(res.body.text).toBe(text);
             })
+            // test return
             .end((err, res) => {
                 if (err) {
                     return done(err);
                 }
 
-                Todo.find({text}).then((todos) => {
+                Todo.find({
+                    text
+                }).then((todos) => {
                     expect(todos.length).toBe(1);
                     expect(todos[0].text).toBe(text);
                     done();
@@ -51,10 +56,10 @@ describe('POST /todos', () => {
     })
 
     it('should not create todo with invalid body data', (done) => {
-        
+
         request(app)
             .post('/todos')
-            .send({ })
+            .send({})
             .expect(400)
             .end((err, res) => {
                 if (err) {
@@ -77,6 +82,6 @@ describe('GET /todos', () => {
             .expect((res) => {
                 expect(res.body.todos.length).toBe(2);
             })
-            .end(done)
+            .end(done);
     })
 })
