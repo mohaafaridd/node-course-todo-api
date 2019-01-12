@@ -17,12 +17,11 @@ var bodyParser = require('body-parser');
 
 var app = express();
 
+const port = process.env.PORT || 3000;
+
 app.use(bodyParser.json());
 
 app.post('/todos', (req, res) => {
-
-    console.log(req.body);
-
     var todo = new Todo({
         text: req.body.text
     });
@@ -56,17 +55,45 @@ app.get('/todos/:id', (req, res) => {
 
     Todo.findById(id)
         .then((todo) => {
-            if(!todo){
+            if (!todo) {
                 return res.status(404).send();
             }
-            res.status(200).send({todo});
+            res.status(200).send({
+                todo
+            });
         })
         .catch((e) => res.status(404).send(e))
 
 })
 
-app.listen(3000, () => {
-    console.log('Started on port 3000');
+app.delete('/todos/:id', (req, res) => {
+    // Get the ID
+    var id = req.params.id;
+
+    // Validate ID ? 404
+    if (!ObjectID.isValid(id)) {
+        return res.status(404).send();
+    }
+
+    // remove todo by ID
+    Todo.findByIdAndRemove(id)
+        .then((todo) => {
+            // ERR - no todo by that ID
+            if (!todo) {
+                return res.status(404).send();
+            }
+            // Succ
+            res.status(200).send({
+                todo
+            })
+        })
+        .catch((e) => {
+            res.status(404).send(e);
+        })
+})
+
+app.listen(port, () => {
+    console.log(`Started on port ${port}`);
 });
 
 

@@ -17,7 +17,7 @@ const todos = [{
 }, {
     _id: new ObjectID(),
     text: 'Second Test Todo'
-}, ]
+},]
 
 beforeEach((done) => {
     Todo.remove({}).then(() => {
@@ -75,6 +75,7 @@ describe('POST /todos', () => {
                     done();
                 }).catch((e) => done(e));
             })
+
     });
 });
 
@@ -91,7 +92,6 @@ describe('GET /todos', () => {
 })
 
 describe('GET /todos/:id', () => {
-
     it('should return todo doc', (done) => {
         request(app)
             .get(`/todos/${todos[0]._id.toHexString()}`)
@@ -115,4 +115,5 @@ describe('GET /todos/:id', () => {
             .expect(404)
             .end(done);
     });
+
 })
