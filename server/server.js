@@ -1,14 +1,25 @@
 require('./config/config');
 
-var { mongoose } = require('./db/mongoose');
-var { Todo } = require('./models/todo');
-var { User } = require('./models/user');
+var {
+    mongoose
+} = require('./db/mongoose');
+var {
+    Todo
+} = require('./models/todo');
+var {
+    User
+} = require('./models/user');
 
+var {
+    authenticate
+} = require('./middleware/authenticate');
 
 const _ = require('lodash');
 const express = require('express');
 const bodyParser = require('body-parser');
-const { ObjectID } = require('mongodb');
+const {
+    ObjectID
+} = require('mongodb');
 
 var app = express();
 const port = process.env.PORT;
@@ -95,21 +106,27 @@ app.patch('/todos/:id', (req, res) => {
         return res.status(404).send();
     }
 
-    if(_.isBoolean(body.completed) && body.completed){
+    if (_.isBoolean(body.completed) && body.completed) {
         body.completedAt = new Date().getTime();
     } else {
         body.completed = false;
         body.completedAt = null;
     }
 
-    Todo.findByIdAndUpdate(id, {$set: body}, {new: true})
+    Todo.findByIdAndUpdate(id, {
+            $set: body
+        }, {
+            new: true
+        })
         .then((todo) => {
-        
-            if(!todo){
+
+            if (!todo) {
                 res.status(404).send();
             }
 
-            res.send({todo})
+            res.send({
+                todo
+            })
 
         })
         .catch((e) => {
@@ -117,7 +134,6 @@ app.patch('/todos/:id', (req, res) => {
         })
 })
 
-// POST /users
 app.post('/users', (req, res) => {
 
     var body = _.pick(req.body, ['email', 'password']);
@@ -136,6 +152,9 @@ app.post('/users', (req, res) => {
 
 });
 
+app.get('/users/me', authenticate, (req, res) => {
+    res.send(req.user);
+})
 
 app.listen(port, () => {
     console.log(`Started on port ${port}`);
