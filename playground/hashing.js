@@ -1,7 +1,11 @@
 const { SHA256 } = require('crypto-js');
 const jwt = require('jsonwebtoken');
+const bcrypt = require('bcryptjs');
 
-var data = {
+
+
+
+/* var data = {
     id: 1
 }
 
@@ -10,7 +14,7 @@ console.log(token);
 
 var decoded = jwt.verify(token, '123aBc')
 console.log('decoded: ', decoded);
-
+ */
 /* var message = "I'm user number 3";
 var hash = SHA256(message).toString();
 
